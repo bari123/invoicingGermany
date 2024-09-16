@@ -73,7 +73,7 @@ function App() {
                         <th>Menge</th>
                         <th>Einheit</th>
                         <th>E-Preis</th>
-                        <th>G-Preis</th>
+                        <th>G-Preiss</th>
                     </tr>
                     </thead>
                     <tbody>
