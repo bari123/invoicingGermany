@@ -22,7 +22,6 @@ function App() {
     const [aufftr, setAufftr] = useState('');
     const [deadline, setDeadline] = useState('');
     const [percentage, setPercentage] = useState('');
-    const [isPrinting,setIsprinting]=useState(false)
     const [inputData, setInputData] = useState({
         Bezeichnung: '',
         Menge: '',
