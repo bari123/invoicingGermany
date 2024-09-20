@@ -38,7 +38,6 @@ function App() {
         setInputData({ Bezeichnung: '',Menge: '',  Einheit: '', ePreis: 0, gPreis: 0 });
     };
     const handleDownloadPdf=()=>{
-        setIsprinting(true);
         generatePDF(targetRef, {filename: `${clientName}-${new Date().toLocaleDateString()}.pdf`})
     }
     const handleInputChange = (e) => {
@@ -87,7 +86,7 @@ function App() {
             <fieldset style={{marginTop:50,display:'flex',width:'100%',justifyContent:'space-around'}}>
               <legend>Actions</legend>
             <button>Print</button>
-            <button onClick={()=>{setIsprinting(true);window.print()}}>Print    Preview</button>
+            <button onClick={()=>{window.print()}}>Print    Preview</button>
             <button onClick={ handleDownloadPdf}>Download PDF</button>
             </fieldset>
 
