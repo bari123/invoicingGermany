@@ -1,5 +1,7 @@
 import './App.css';
-import { useState } from 'react';
+import {useRef, useState} from 'react';
+import {PrintableFile} from "./printablefile";
+import generatePDF from 'react-to-pdf';
 
 const InputField = ({ label, value, onChange }) => (
     <label>
@@ -9,6 +11,8 @@ const InputField = ({ label, value, onChange }) => (
 );
 
 function App() {
+
+    const targetRef = useRef();
     const [clientName, setClientName] = useState('');
     const [clientAddress, setClientAddress] = useState('');
     const [rech, setRech] = useState('');
@@ -18,21 +22,26 @@ function App() {
     const [aufftr, setAufftr] = useState('');
     const [deadline, setDeadline] = useState('');
     const [percentage, setPercentage] = useState('');
-
+    const [isPrinting,setIsprinting]=useState(false)
     const [inputData, setInputData] = useState({
-        column1: '',
-        column2: '',
-        column3: '',
-        column4: '',
-        column5: ''
+        Bezeichnung: '',
+        Menge: '',
+        Einheit: '',
+        ePreis: 0,
+        gPreis: 0
     });
     const [tableData, setTableData] = useState([]);
 
+    const invoiceInfo={rech,leist,rechnungNr,kdNr,aufftr}
+
     const handleAddRow = () => {
         setTableData([...tableData, inputData]);
-        setInputData({ column1: '', column2: '', column3: '', column4: '', column5: '' });
+        setInputData({ Bezeichnung: '',Menge: '',  Einheit: '', ePreis: 0, gPreis: 0 });
     };
-
+    const handleDownloadPdf=()=>{
+        setIsprinting(true);
+        generatePDF(targetRef, {filename: `${clientName}-${new Date().toLocaleDateString()}.pdf`})
+    }
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setInputData((prevData) => ({ ...prevData, [name]: value }));
@@ -40,8 +49,10 @@ function App() {
 
     return (
         <div className="App">
-            <div style={{display:'flex',width:'100%',justifyContent:'space-around'}}>
-
+            <div ref={targetRef} style={{width:'100%',height:'100%',padding:20,marginBottom:50}}>
+                <PrintableFile deadline={deadline} percentage={percentage} articles={tableData} client={{clientName,clientAddress}} invoiceInfo={invoiceInfo} />
+            </div>
+            <div style={{display:'flex',width:'100%',justifyContent:'space-around',borderTop:'2px solid black'}}>
             <fieldset>
                 <legend>Client Information</legend>
                 <InputField label="Name" value={clientName} onChange={e => setClientName(e.target.value)} />
@@ -65,46 +76,22 @@ function App() {
             </fieldset>
 
             <div className="table-container">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Pos.nr</th>
-                        <th>Bezeichnung</th>
-                        <th>Menge</th>
-                        <th>Einheit</th>
-                        <th>E-Preis</th>
-                        <th>G-Preiss</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {tableData.map((row, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{row.column1}</td>
-                            <td>{row.column2}</td>
-                            <td>{row.column3}</td>
-                            <td>{row.column4}</td>
-                            <td>{row.column5}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-
                 <div>
-                    <input type="text" name="column1" placeholder="Bezeichnung" value={inputData.column1} onChange={handleInputChange} />
-                    <input type="text" name="column2" placeholder="Menge" value={inputData.column2} onChange={handleInputChange} />
-                    <input type="text" name="column3" placeholder="Einheit" value={inputData.column3} onChange={handleInputChange} />
-                    <input type="text" name="column4" placeholder="E-Preis" value={inputData.column4} onChange={handleInputChange} />
-                    <input type="text" name="column5" placeholder="G-Preis" value={inputData.column5} onChange={handleInputChange} />
+                    <input type="text" name="Bezeichnung" placeholder="Bezeichnung" value={inputData.Bezeichnung}  onChange={handleInputChange} />
+                    <input type="text" name="Menge" placeholder="Menge" value={inputData.Menge} onChange={handleInputChange} />
+                    <input type="text" name="Einheit" placeholder="Einheit" value={inputData.Einheit} onChange={handleInputChange} />
+                    <input type="text" name="ePreis" placeholder="E-Preis" value={inputData.ePreis} onChange={handleInputChange} />
+                    <input type="text" name="gPreis" placeholder="G-Preis" value={inputData.gPreis} onChange={handleInputChange} />
                     <button onClick={handleAddRow}>+ Add Row</button>
                 </div>
             </div>
             <fieldset style={{marginTop:50,display:'flex',width:'100%',justifyContent:'space-around'}}>
               <legend>Actions</legend>
             <button>Print</button>
-            <button>Print    Preview</button>
-            <button>Download</button>
+            <button onClick={()=>{setIsprinting(true);window.print()}}>Print    Preview</button>
+            <button onClick={ handleDownloadPdf}>Download PDF</button>
             </fieldset>
+
         </div>
     );
 }

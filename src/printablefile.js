@@ -1,4 +1,5 @@
 export function PrintableFile ({client,invoiceInfo,articles,deadline,percentage}){
+    console.log(articles)
     const nettoSum=articles.reduce((sum,item)=>sum+item.gPreis,0)
 
     return (
@@ -65,7 +66,7 @@ export function PrintableFile ({client,invoiceInfo,articles,deadline,percentage}
                     </tr>
                     {articles && articles.map((x, index) => {
                         return (
-                            <tr  style={{textAlign:'center'}}>
+                            <tr key={index}  style={{textAlign:'center'}}>
                                 <td >{index}.0</td>
                                 <td style={{textAlign:'left',textWrap:'wrap',maxWidth:'300px'}} >{x.Bezeichnung}</td>
                                 <td>{x.Menge}</td>
