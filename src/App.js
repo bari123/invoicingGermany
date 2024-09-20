@@ -1,7 +1,7 @@
 import './App.css';
 import {useRef, useState} from 'react';
 import {PrintableFile} from "./printablefile";
-import generatePDF from 'react-to-pdf';
+import generatePDF, {Margin} from 'react-to-pdf';
 
 const InputField = ({ label, value, onChange }) => (
     <label>
@@ -11,7 +11,6 @@ const InputField = ({ label, value, onChange }) => (
 );
 
 function App() {
-
     const targetRef = useRef();
     const [clientName, setClientName] = useState('');
     const [clientAddress, setClientAddress] = useState('');
@@ -37,60 +36,64 @@ function App() {
         setTableData([...tableData, inputData]);
         setInputData({ Bezeichnung: '',Menge: '',  Einheit: '', ePreis: 0, gPreis: 0 });
     };
+
     const handleDownloadPdf=()=>{
-        generatePDF(targetRef, {filename: `${clientName}-${new Date().toLocaleDateString()}.pdf`})
-    }
+        generatePDF(targetRef, {filename: `${clientName}-${new Date().toLocaleDateString()}.pdf`,page:{margin:Margin.SMALL}});
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setInputData((prevData) => ({ ...prevData, [name]: value }));
     };
 
     return (
-        <div className="App">
-            <div ref={targetRef} style={{width:'100%',height:'100%',padding:20,marginBottom:50}}>
-                <PrintableFile deadline={deadline} percentage={percentage} articles={tableData} client={{clientName,clientAddress}} invoiceInfo={invoiceInfo} />
-            </div>
-            <div style={{display:'flex',width:'100%',justifyContent:'space-around',borderTop:'2px solid black'}}>
-            <fieldset>
-                <legend>Client Information</legend>
-                <InputField label="Name" value={clientName} onChange={e => setClientName(e.target.value)} />
-                <InputField label="Address" value={clientAddress} onChange={e => setClientAddress(e.target.value)} />
-            </fieldset>
-
-            <fieldset>
-                <legend>Invoice Information</legend>
-                <InputField label="Rechn.-Datum" value={rech} onChange={e => setRech(e.target.value)} />
-                <InputField label="Leist.-Datum" value={leist} onChange={e => setLeist(e.target.value)} />
-                <InputField label="Rechnung-Nr." value={rechnungNr} onChange={e => setRechnungNr(e.target.value)} />
-                <InputField label="Kd-Nummer" value={kdNr} onChange={e => setKdNr(e.target.value)} />
-                <InputField label="Aufftr.-Nummer" value={aufftr} onChange={e => setAufftr(e.target.value)} />
-            </fieldset>
+        <>
+            <div ref={targetRef}>
+                <PrintableFile  deadline={deadline} percentage={percentage} articles={tableData} client={{name:clientName, address:clientAddress}} invoiceInfo={invoiceInfo} />
             </div>
 
-            <fieldset>
-                <legend>Other Information</legend>
-                <InputField label="Frist" value={deadline} onChange={e => setDeadline(e.target.value)} />
-                <InputField label="Prozentsatz" value={percentage} onChange={e => setPercentage(e.target.value)} />
-            </fieldset>
+            <div className="App noPrint">
+                <div style={{display:'flex',width:'100%',justifyContent:'space-around',borderTop:'2px solid black'}}>
+                    <fieldset>
+                        <legend>Client Information</legend>
+                        <InputField label="Name" value={clientName} onChange={e => setClientName(e.target.value)} />
+                        <InputField label="Address" value={clientAddress} onChange={e => setClientAddress(e.target.value)} />
+                    </fieldset>
 
-            <div className="table-container">
-                <div>
-                    <input type="text" name="Bezeichnung" placeholder="Bezeichnung" value={inputData.Bezeichnung}  onChange={handleInputChange} />
-                    <input type="text" name="Menge" placeholder="Menge" value={inputData.Menge} onChange={handleInputChange} />
-                    <input type="text" name="Einheit" placeholder="Einheit" value={inputData.Einheit} onChange={handleInputChange} />
-                    <input type="text" name="ePreis" placeholder="E-Preis" value={inputData.ePreis} onChange={handleInputChange} />
-                    <input type="text" name="gPreis" placeholder="G-Preis" value={inputData.gPreis} onChange={handleInputChange} />
-                    <button onClick={handleAddRow}>+ Add Row</button>
+                    <fieldset>
+                        <legend>Invoice Information</legend>
+                        <InputField label="Rechn.-Datum" value={rech} onChange={e => setRech(e.target.value)} />
+                        <InputField label="Leist.-Datum" value={leist} onChange={e => setLeist(e.target.value)} />
+                        <InputField label="Rechnung-Nr." value={rechnungNr} onChange={e => setRechnungNr(e.target.value)} />
+                        <InputField label="Kd-Nummer" value={kdNr} onChange={e => setKdNr(e.target.value)} />
+                        <InputField label="Aufftr.-Nummer" value={aufftr} onChange={e => setAufftr(e.target.value)} />
+                    </fieldset>
                 </div>
-            </div>
-            <fieldset style={{marginTop:50,display:'flex',width:'100%',justifyContent:'space-around'}}>
-              <legend>Actions</legend>
-            <button>Print</button>
-            <button onClick={()=>{window.print()}}>Print    Preview</button>
-            <button onClick={ handleDownloadPdf}>Download PDF</button>
-            </fieldset>
 
-        </div>
+                <fieldset>
+                    <legend>Other Information</legend>
+                    <InputField label="Frist" value={deadline} onChange={e => setDeadline(e.target.value)} />
+                    <InputField label="Prozentsatz" value={percentage} onChange={e => setPercentage(e.target.value)} />
+                </fieldset>
+
+                <div className="table-container">
+                    <div>
+                        <input type="text" name="Bezeichnung" placeholder="Bezeichnung" value={inputData.Bezeichnung}  onChange={handleInputChange} />
+                        <input type="text" name="Menge" placeholder="Menge" value={inputData.Menge} onChange={handleInputChange} />
+                        <input type="text" name="Einheit" placeholder="Einheit" value={inputData.Einheit} onChange={handleInputChange} />
+                        <input type="text" name="ePreis" placeholder="E-Preis" value={inputData.ePreis} onChange={handleInputChange} />
+                        <input type="text" name="gPreis" placeholder="G-Preis" value={inputData.gPreis} onChange={handleInputChange} />
+                        <button onClick={handleAddRow}>+ Add Row</button>
+                    </div>
+                </div>
+
+                <fieldset style={{marginTop:50,display:'flex',width:'100%',justifyContent:'space-around'}}>
+                    <legend>Actions</legend>
+                    <button onClick={()=>{window.print()}}>Print </button>
+                    <button onClick={handleDownloadPdf}>Download PDF</button>
+                </fieldset>
+            </div>
+        </>
     );
 }
 

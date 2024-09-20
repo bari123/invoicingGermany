@@ -1,20 +1,26 @@
-export function PrintableFile ({client,invoiceInfo,articles,deadline,percentage}){
-    console.log(articles)
-    const nettoSum=articles.reduce((sum,item)=>sum+item.gPreis,0)
+export function PrintableFile({client, invoiceInfo, articles, deadline, percentage}) {
+    let nettoSum
+    for(const x of articles){
+        nettoSum =+ x.gPreis
+    }
+    const percentageToAdd = nettoSum * (percentage / 100)
+    let bruttoSum = 0
+        bruttoSum = percentageToAdd? (nettoSum + percentageToAdd):nettoSum
+
 
     return (
         <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
             <p style={{textAlign: 'center', fontWeight: 'bold', borderBottom: '2px solid black'}}>METI-Construction
                 UG</p>
             <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: 50}}>
-                <div style={{width: '21%', fontSize: '10px', lineHeight: 1.5}}>
-                    <div style={{textDecoration: 'underline', fontSize: '5px'}}>METI-Construction UG - Uhlenhorst
+                <div style={{width: '30%', fontSize: '20px', lineHeight: 1.5}}>
+                    <div style={{textDecoration: 'underline', fontSize: '10px'}}>METI-Construction UG - Uhlenhorst
                         149A - 21435 Stelle
                     </div>
                     <div>{client.name}</div>
                     <div>{client.addresS}</div>
                 </div>
-                <div style={{width: '20%', fontSize: '10px', textAlign: 'end', lineHeight: 1.5}}>
+                <div style={{fontSize: '20px', textAlign: 'end', lineHeight: 1.5}}>
                     <div>METI-CONSTRUCTION</div>
                     <div>Uhlenhorst 149A</div>
                     <div>21435 Stelle</div>
@@ -24,13 +30,13 @@ export function PrintableFile ({client,invoiceInfo,articles,deadline,percentage}
                 </div>
             </div>
             <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: 50}}>
-                <div style={{fontSize: '12px', display: 'flex', flexDirection: 'column'}}>
+                <div style={{fontSize: '18px', display: 'flex', flexDirection: 'column'}}>
                     <div>Diverse Bauhaben</div>
                     <p style={{fontWeight: 'bolder', textAlign: 'center'}}>Rechnung</p>
                     <div>Sehr geehrte Damen und Herren</div>
                     <div>hiermit stellen wir Ihnen folgende Leistungen in rechnung</div>
                 </div>
-                <div style={{fontSize: '12px', width: '30%', margin: 0}}>
+                <div style={{fontSize: '20px', width: '30%', margin: 0}}>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                         <div>Rechn.-Datum</div>
                         <div>{invoiceInfo.rech}</div>
@@ -56,9 +62,9 @@ export function PrintableFile ({client,invoiceInfo,articles,deadline,percentage}
             <div style={{width: '100%', marginBottom: 50, display: 'flex', flexDirection: 'column'}}>
                 <table width={'100%'}>
                     <tbody>
-                    <tr style={{border: '1px solid black'}}>
+                    <tr style={{border: '1px solid black', fontSize: '20px'}}>
                         <th>Pos-Nr</th>
-                        <th style={{textAlign:'left'}}>Bezeichnung</th>
+                        <th style={{textAlign: 'left'}}>Bezeichnung</th>
                         <th>Menge</th>
                         <th>Einheit</th>
                         <th>E-Preis</th>
@@ -66,22 +72,41 @@ export function PrintableFile ({client,invoiceInfo,articles,deadline,percentage}
                     </tr>
                     {articles && articles.map((x, index) => {
                         return (
-                            <tr key={index}  style={{textAlign:'center'}}>
-                                <td >{index}.0</td>
-                                <td style={{textAlign:'left',textWrap:'wrap',maxWidth:'300px'}} >{x.Bezeichnung}</td>
+                            <tr key={index} style={{textAlign: 'center', fontSize: '18px'}}>
+                                <td>{index}.0</td>
+                                <td style={{
+                                    textAlign: 'left',
+                                    textWrap: 'wrap',
+                                    maxWidth: '300px'
+                                }}>{x.Bezeichnung}</td>
                                 <td>{x.Menge}</td>
                                 <td>{x.Einheit}</td>
-                                <td>{x.ePreis},00</td>
-                                <td >{x.gPreis},00</td>
+                                <td>{x.ePreis}</td>
+                                <td>{x.gPreis}</td>
                             </tr>
                         )
                     })}
                     </tbody>
                 </table>
-                <div style={{paddingLeft: '60%', marginTop: 10,display:'grid',flexDirection:'column'}}>
+                <div style={{
+                    paddingLeft: '60%',
+                    marginTop: 10,
+                    display: 'grid',
+                    flexDirection: 'column',
+                    fontSize: '15px'
+                }}>
                     <div>Positionsfortsetzung nächste seite</div>
-                    <div style={{width:'150px',background: 'lightgreen',textAlign:'center',padding:5 ,borderBottom:'2px solid black',color: 'white',justifySelf:"end"}}>
-                        Übertrag: <span>€ {nettoSum},00</span>
+                    <div style={{
+                        fontSize: '20px',
+                        width: '150px',
+                        background: 'lightgreen',
+                        textAlign: 'center',
+                        padding: 5,
+                        borderBottom: '2px solid black',
+                        color: 'white',
+                        justifySelf: "end"
+                    }}>
+                        Übertrag: <span>€ {nettoSum?.toFixed(2)}</span>
                     </div>
                 </div>
             </div>
@@ -91,7 +116,8 @@ export function PrintableFile ({client,invoiceInfo,articles,deadline,percentage}
                 justifyContent: 'end',
                 paddingLeft: "50%",
                 gap: 10,
-                marginBottom: 50
+                marginBottom: 50,
+                fontSize: '20px'
             }}>
                 <div style={{
                     display: 'flex',
@@ -100,33 +126,39 @@ export function PrintableFile ({client,invoiceInfo,articles,deadline,percentage}
                     borderBottom: '1px solid black'
                 }}>
                     <div>Nettosumme</div>
-                    <div>€ {nettoSum},00</div>
+                    <div>€ {nettoSum?.toFixed(2)}</div>
                 </div>
                 {
-                 percentage &&
-                <div style={{display: 'flex', justifyContent: 'space-around', alignContent: 'end'}}>
-                    <div>
-                        MwSt. 19.00%
+                    percentage &&
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-around',
+                        alignContent: 'end',
+                        fontSize: '20px'
+                    }}>
+                        <div>
+                            MwSt. {percentage}%
+                        </div>
+                        <div>
+                            von {nettoSum.toFixed(2)}
+                        </div>
+                        <div>
+                            € {percentageToAdd.toFixed(2)}
+                        </div>
                     </div>
-                    <div>
-                        von {nettoSum}
-                    </div>
-                    <div>
-                        € {percentage}
-                    </div>
-                </div>
                 }
                 <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     justifySelf: 'end',
-                    borderBottom: '1px solid black'
+                    borderBottom: '1px solid black',
+                    fontSize: '20px'
                 }}>
                     <div>Bruttosumme</div>
-                    <div>€ { nettoSum + percentage}</div>
+                    <div>€ {bruttoSum?.toFixed(2)}</div>
                 </div>
             </div>
-            <div>
+            <div style={{fontSize: '20px'}}>
                 Zahlbar bis zum {deadline} ohne Abzug.
             </div>
         </div>
