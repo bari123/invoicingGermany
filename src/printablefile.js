@@ -10,15 +10,12 @@ export function PrintableFile({client, invoiceInfo, articles, deadline, percenta
 
     return (
         <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-            <p style={{textAlign: 'center', fontWeight: 'bold', borderBottom: '2px solid black'}}>METI-Construction
-                UG</p>
+            <p style={{textAlign: 'center', fontWeight: 'bold', borderBottom: '2px solid black'}}>METI-Construction UG</p>
             <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', marginBottom: 50}}>
                 <div style={{width: '30%', fontSize: '20px', lineHeight: 1.5}}>
-                    <div style={{textDecoration: 'underline', fontSize: '10px'}}>METI-Construction UG - Uhlenhorst
-                        149A - 21435 Stelle
-                    </div>
+                    <div style={{textDecoration: 'underline', fontSize: '10px'}}>METI-Construction UG - Uhlenhorst 149A - 21435 Stelle</div>
                     <div>{client.name}</div>
-                    <div>{client.addresS}</div>
+                    <div>{client.address}</div>
                 </div>
                 <div style={{fontSize: '20px', textAlign: 'end', lineHeight: 1.5}}>
                     <div>METI-CONSTRUCTION</div>
@@ -140,10 +137,10 @@ export function PrintableFile({client, invoiceInfo, articles, deadline, percenta
                             MwSt. {percentage}%
                         </div>
                         <div>
-                            von {nettoSum.toFixed(2)}
+                            von {nettoSum?.toFixed(2)}
                         </div>
                         <div>
-                            € {percentageToAdd.toFixed(2)}
+                            € {percentageToAdd?.toFixed(2)}
                         </div>
                     </div>
                 }
